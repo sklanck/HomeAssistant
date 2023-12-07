@@ -1,0 +1,120 @@
+esphome:
+  name: heizkreis-verteiler
+
+esp8266:
+  board: nodemcuv2
+
+# Enable logging
+logger:
+  level: VERBOSE
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "H1IcdFfCyCT59OmrHN5y4Warkf9vScD0308XRge34Hw="
+
+ota:
+  password: "91d719fa4a6090a35dec9aceb81e68d3"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Heizkreis-Verteiler"
+    password: "cLZw1cRAGtJ8"
+
+captive_portal:
+ 
+light:
+  - platform: binary
+    id: led_kueche
+    name: "LED Küche"
+    output: output_kueche
+
+  - platform: binary
+    id: led_bad
+    name: "LED Bad"
+    output: output_bad
+
+  - platform: binary
+    id: led_flur
+    name: "LED Flur"
+    output: output_flur
+
+  - platform: binary
+    id: led_wohnzimmer
+    name: "LED Wohnzimmer"
+    output: output_wohnzimmer
+
+output:
+  - id: output_kueche
+    platform: gpio
+    pin: GPIO15
+  - id: output_bad
+    platform: gpio
+    pin: GPIO13
+  - id: output_flur
+    platform: gpio
+    pin: GPIO12
+  - id: output_wohnzimmer
+    platform: gpio
+    pin: GPIO14
+
+switch:
+  - platform: gpio
+    name: "Heizung Küche"    
+    id: heater_kueche
+    icon: "mdi:radiator"  
+    pin:
+      number: GPIO04
+      inverted: false
+    on_turn_on: 
+      then:
+        - light.turn_on: led_kueche
+    on_turn_off: 
+      then:
+        - light.turn_off: led_kueche
+
+  - platform: gpio
+    name: "Heizung Bad"    
+    id: heater_bad
+    icon: "mdi:radiator"  
+    pin:
+      number: GPIO05
+      inverted: false
+    on_turn_on: 
+      then:
+        - light.turn_on: led_bad
+    on_turn_off: 
+      then:
+        - light.turn_off: led_bad
+
+  - platform: gpio
+    name: "Heizung Flur"    
+    id: heater_flur
+    icon: "mdi:radiator"  
+    pin:
+      number: GPIO03
+      inverted: false
+    on_turn_on: 
+      then:
+        - light.turn_on: led_flur
+    on_turn_off: 
+      then:
+        - light.turn_off: led_flur
+
+  - platform: gpio
+    name: "Heizung Wohnzimmer"    
+    id: heater_wohnzimmer
+    icon: "mdi:radiator"  
+    pin:
+      number: GPIO01
+      inverted: false
+    on_turn_on: 
+      then:
+        - light.turn_on: led_wohnzimmer
+    on_turn_off: 
+      then:
+        - light.turn_off: led_wohnzimmer
